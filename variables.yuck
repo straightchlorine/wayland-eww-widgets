@@ -1,0 +1,25 @@
+; width and height of the monitor
+(defpoll width :initial 1920 :interval '1h' `xrandr --current | grep '*' | uniq | awk '{print $1}' | cut -d 'x' -f1`)
+(defpoll height :initial 1080 :interval '1h' `xrandr --current | grep '*' | uniq | awk '{print $1}' | cut -d 'x' -f2`)
+
+; both time and date
+(defpoll time :interval '1s' `date +'{"date": "%d %B", "hour": "%H", "minute": "%M", "second": "%S", "montnumber": "%m", "day": "%A", "year": "%Y"}'`)
+
+; workspaces
+(deflisten workspace 'scripts/workspaces')
+(deflisten active-workspace 'scripts/active-workspace')
+(deflisten active-window 'scripts/active-window')
+
+(defvar workspace-icons '["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]')
+
+; weather
+(defpoll weather-icon :interval "3m" 'scripts/weather --icon')
+(defpoll weather-temperature :interval "3m" 'scripts/weather --temp')
+(defpoll weather-color :interval "3m" 'scripts/weather --color')
+
+; system
+(defpoll sys-cpu  :interval '1s' 'scripts/sysinfo --cpu')
+(defpoll sys-ram  :interval '1s' 'scripts/sysinfo --memory')
+(defpoll sys-disk :interval '1s' 'scripts/sysinfo --disk')
+
+(deflisten sys-net 'scripts/network')
