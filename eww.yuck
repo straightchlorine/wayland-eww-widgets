@@ -1,0 +1,102 @@
+(include './modules/variables.yuck')
+(include './modules/clock-date.yuck')
+(include './modules/workspaces.yuck')
+(include './modules/active-window.yuck')
+(include './modules/weather.yuck')
+(include './modules/system-info.yuck')
+(include './modules/network.yuck')
+
+(defwindow bar
+  :monitor 0
+  :exclusive true
+  :namespace 'bar'
+  :stacking 'bottom'
+  :geometry (geometry :x '5px'
+                      :y '10px'
+                      :width '99%'
+                      :height '45px'
+                      :anchor 'top center'
+  )
+  (bar)
+)
+
+(defwidget bar []
+  (box
+    :space-evenly false
+    :orientation 'h'
+    (box
+      :class 'bar-background'
+    )
+    (centerbox
+      :class 'bar'
+      :width 1870
+      (left)
+      (center)
+      (right)
+    )
+  )
+)
+
+(defwidget left []
+  (eventbox
+    (box
+      :space-evenly false
+      :spacing 5
+      :valign 'center'
+      :halign 'start'
+      :class 'bar-left'
+      (revealer
+        :reveal true
+        :transition 'slideright'
+	(box
+            (system-info)
+	)
+      )
+    )
+  )
+)
+
+(defwidget center []
+  (box
+    :space-evenly false 
+    :orientation 'v'
+    (box
+      :space-evenly false 
+      :halign 'center'
+      :valign 'start'
+      :spacing 5
+      (box
+        :space-evenly false
+        :spacing 5
+        :class 'module'
+        (revealer
+          :reveal true
+          :transition 'slideright'
+          :duration '0ms'
+          (workspaces)
+        )
+        (revealer
+          :reveal true
+          :transition 'slideright'
+          :duration '0ms'
+          (activewindow)
+        )
+      )
+    )
+  )
+)
+
+(defwidget right []
+  (eventbox
+    (centerbox
+      :space-evenly false
+      :spacing 5
+      :valign 'center'
+      :halign 'end'
+      :class 'bar-right'
+      (network-info)
+      (weather)
+      (clock-date)
+    )
+  )
+)
