@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -m
+
+memory() {
+  ram_percentage=$(printf "%.2f\n" $(free -m | grep Mem | awk '{print ($3/$2)*100}'))
+  echo "$ram_percentage"
+}
+
+cpu() {
+  idle=$(mpstat | awk {'print $12'} | sed -n '4p')
+  usage=$(echo 100 - $idle | bc)
+  printf "%.2f\n" $(echo $usage)
+}
+
+
+disk() {
+  # get each disks names
+  bckp_disk=$(df -h | rg '/.backups$' | awk '{print $1}')
+  root_disk=$(df -h | rg '/$' | awk '{print $1}')
+  home_disk=$(df -h | rg '/home$' | awk '{print $1}')
+  data_disk=$(df -h | rg '/.data$' | awk '{print $1}')
+  virt_disk=$(df -h | rg '/.virtualization$' | awk '{print $1}')
+  var_disk=$(df -h | rg '/var$' | awk '{print $1}')
+
+  disks=($root_disk $var_disk $home_disk $data_disk $bckp_disk $virt_disk)
+  usage=()
+
+  # loop over each disk, and get each disks' usage and put it into usage array
+  for disk in "${disks[@]}"; do
+    df_output=$(df -h "$disk" | awk '{print $5}' | tail -n 1 | sed 's/%//g')
+    usage+=("$df_output")
+  done
+
+  # return output as json
+  echo '[{"name" : "root", "usage": "'"${usage[0]}"'"},{"name" : "var", "usage": "'"${usage[1]}"'"},{"name" : "home", "usage": "'"${usage[2]}"'"},{"name" : "data", "usage": "'"${usage[3]}"'"},{"name" : "backup", "usage": "'"${usage[4]}"'"},{"name" : "virt", "usage": "'"${usage[5]}"'"}]'
+}
+
+#battery() {
+#    bat=$(ls /sys/class/power_supply | grep BAT | head -n 1)
+#    if [[ $bat ]]; then
+#        cat /sys/class/power_supply/$bat/capacity
+#    fi
+#}
+#
+#brightness() {
+#    if [[ $(ls /sys/class/backlight | head -n 1) ]]; then
+#        light -G
+#    fi
+#}
+
+if [[ "$1" == "-c" || "$1" == "--cpu" ]]; then
+    cpu
+elif [[ "$1" == "-m" || "$1" == "--memory" ]]; then
+    memory
+elif [[ "$1" == "-c" || "$1" == "--cpu" ]]; then 
+    cpu
+elif [[ "$1" == "-d" || "$1" == "--disk" ]]; then
+    disk $2
+elif [[ "$1" == "-b" || "$1" == "--battery" ]]; then
+    battery
+elif [[ "$1" == "-l" || "$1" == "--brightness" ]]; then
+    brightness
+fi
