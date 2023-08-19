@@ -1,0 +1,12 @@
+#!/bin/bash
+
+network_status=$(nmcli g | tail -n 1 | awk '{print $1}')
+
+ if [ "$status" != 'disconnected' ] ; then
+  vnstat -l --json | while read -r json; do
+    index=$(echo $json | jq .index)
+    if [ "$index" != 'null' ] ; then
+      echo $json
+    fi
+  done
+ fi
