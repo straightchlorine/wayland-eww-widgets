@@ -1,0 +1,91 @@
+(defwidget system-info []
+  (centerbox
+    :class 'system-info'
+    :space-evenly false
+    :orientation 'h'
+    :halign 'center'
+    (cpu-info)
+    (ram-info)
+    (disk-info)
+  )
+)
+
+(defwidget cpu-info []
+  (box
+    :class 'cpu-wrapper'
+    :orientation 'h'
+    :space-evenly false
+    (label
+      :class 'cpu-icon'
+      :valign 'center'
+      :halign 'center'
+      :text ''
+    )
+    (label
+      :class 'cpu'
+      :valign 'center'
+      :halign 'center'
+      :text '${sys-cpu}%'
+    )
+  )
+)
+
+(defwidget ram-info []
+  (box
+    :class 'ram-wrapper'
+    :orientation 'h'
+    :space-evenly false
+    (label
+      :class 'ram-icon'
+      :valign 'center'
+      :halign 'center'
+      :text ''
+    )
+    (label
+      :class 'ram'
+      :valign 'center'
+      :halign 'center'
+      :text '${sys-ram}%'
+    )
+  )
+)
+
+(defwidget disk-info []
+  (box
+    :class 'disk-wrapper'
+    :orientation 'h'
+    :space-evenly false
+    (for disk in sys-disk
+      (box
+        :class 'disk-module'
+        :orientation 'v'
+        :space-evenly false
+        (label
+          :class 'disk-mount'
+          :valign 'center'
+          :halign 'center'
+          :text '${(disk.usage == '') ? '' : '${disk.name}'}'
+        )
+        (box
+          :class 'disk-icon-usage'
+          :orientation 'h'
+          :space-evenly false
+          :valign 'center'
+          :halign 'start'
+          (label
+            :class 'disk-icon'
+            :valign 'center'
+            :halign 'start'
+            :text '${(disk.usage == '') ? '' : ''}'
+          )
+          (label
+            :class 'disk-usage'
+            :valign 'center'
+            :halign 'end'
+            :text '${(disk.usage == '') ? '' : '${disk.usage}%'}'
+          )
+        )
+      )
+    )
+  )
+)
