@@ -1,0 +1,30 @@
+(defwidget clock-date []
+  (eventbox
+    :class 'clock-date'
+    (box
+      :space-evenly false
+      :orientation 'v'
+      :valign 'center'
+      (box
+        :class 'clock'
+        :orientation 'v'
+        :valign 'center'
+        (box
+          :space-evenly false
+          :halign 'end'
+          (label :text '${time.hour}' :class 'clock hour')
+          (label :text ':' :class 'clock')
+          (label :text {time.minute} :class 'clock minute')
+          (label :text ':' :class 'clock')
+          (label :text {time.second} :class 'clock second')
+        )
+        (box
+          :halign 'start'
+          :valign 'end'
+          :class 'date'
+          (label :text '${time.day}, ${time.date} ${time.year}')
+        )
+      )
+    )
+  )
+)
