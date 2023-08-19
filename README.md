@@ -1,5 +1,6 @@
 <div align='center'>
-    <h1>eww widgets</h1>
+    <h1>eww-wayland widgets</h1>
 </div>
 
-Widgets for eww written for awesomewm and hyprland.
+Widgets written for eww wayland.
+
