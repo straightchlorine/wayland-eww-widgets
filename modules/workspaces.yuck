@@ -1,0 +1,31 @@
+(defwidget workspaces []
+  (eventbox
+    :onscroll 'echo {} | sed -e \"s/up/-1/g\" -e \"s/down/+1/g\" | xargs hyprctl dispatch workspace'
+    :class 'workspace-wrapper'
+    (overlay
+      (box
+        :class 'workspaces'
+        :spacing 0
+        :space-evenly false
+        (for i in workspace
+          (button
+            :class 'workspace'
+            :onclick 'hyprctl dispatch workspace ${i.id}'
+            (label
+              :valign 'center'
+              :class '${(i.windows > 0) ? 'workspace-occupied-text' : 'workspace-unoccupied-text'} workspace-text'
+              :text '${workspace-icons[i.id - 1]}'
+            )
+          )
+        )
+      )
+      (button
+        :class 'workspace-active'
+        :style 'margin-left:  ${31 * (active-workspace - 1)}px;
+                margin-right: ${31 * (10 - active-workspace)}px;'
+        (label :valign 'center' :class 'workspace-text workspace-active-text' :text '${active-workspace}'
+        )
+      )
+    )
+  )
+)
