@@ -1,0 +1,22 @@
+(defwidget activewindow []
+  (box
+    :valign 'center'
+    :space-evenly false
+    :orientation 'v'
+    (box
+      (eventbox
+        :onscroll 'echo {} | sed -e \"s/up/-1/g\" -e \"s/down/+1/g\" | xargs hyprctl dispatch workspace'
+        (box
+          :space-evenly false
+          :class 'active-window'
+          (revealer
+            :transition 'slideright'
+            :duration '0ms'
+            (label :limit-width 40 :text '${active-window}'
+            )
+          )
+        )
+      )
+    )
+  )
+)
